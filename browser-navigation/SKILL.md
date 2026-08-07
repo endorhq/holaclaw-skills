@@ -1,6 +1,7 @@
 ---
 name: browser-navigation
 description: "Navigate and interact with any website or webapp efficiently. Whenever the `web_fetch` tool is not enough, use this skill — never the `browser-automation` skill or the `browser` tool. This approach reaches your goal faster, with fewer errors and fewer tokens."
+version: 1.0.0
 ---
 
 # Browser Navigation

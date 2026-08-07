@@ -1,0 +1,33 @@
+name: Check
+
+# Runs the publish planner without touching any ref, so a pull request fails
+# here rather than on main: stale catalog table, invalid frontmatter, or skill
+# content edited without bumping its version.
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Read-only: this job must never be able to publish anything.
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      # The planner builds (unreferenced) commit objects even in dry-run mode,
+      # which needs an identity git can resolve.
+      - name: Configure committer
+        run: |
+          git config user.name 'HolaClaw Bot'
+          git config user.email 'endor-bot@endor.dev'
+
+      - name: README catalog is current
+        run: node scripts/gen-readme.mjs --check
+
+      - name: Skills are publishable
+        run: node scripts/publish.mjs

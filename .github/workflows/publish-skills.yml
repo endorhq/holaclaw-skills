@@ -1,0 +1,53 @@
+name: Publish skills
+
+# Republishes each skill directory to its own orphan branch and version tag.
+# Only ever triggered from main — never from the publish branches themselves.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      skill:
+        description: Limit to a single skill (default: all)
+        required: false
+      reset-branch:
+        description: Re-root the branch as an orphan (rewrites its history; requires `skill`)
+        type: boolean
+        default: false
+
+# Serialise runs so two merges to main cannot race on the same branch push.
+concurrency:
+  group: publish-skills
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Granted explicitly rather than inherited: the organization pins the
+    # default GITHUB_TOKEN to read-only, and pushing branches and tags needs
+    # more than that. A restrictive default is a starting point, not a cap.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Publishing needs every existing branch and tag to decide what changed.
+          fetch-tags: true
+
+      - name: Verify the README catalog is current
+        run: node scripts/gen-readme.mjs --check
+
+      - name: Configure committer
+        run: |
+          git config user.name 'HolaClaw Bot'
+          git config user.email 'endor-bot@endor.dev'
+
+      - name: Publish
+        run: |
+          node scripts/publish.mjs --write --push \
+            ${SKILL:+--skill "$SKILL"} \
+            ${RESET:+--reset-branch}
+        env:
+          SKILL: ${{ inputs.skill }}
+          RESET: ${{ inputs.reset-branch == true && '1' || '' }}
