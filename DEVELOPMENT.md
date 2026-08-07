@@ -120,12 +120,12 @@ rather than half the skills.
 | `publish-skills.yml` | push to `main` | Publishes branches and tags. Also runs the catalog check first. |
 
 `publish-skills.yml` also accepts a manual `workflow_dispatch` with two inputs: `skill` to limit the run to one
-skill, and `reset-branch` to re-root a branch as an orphan. `reset-branch` rewrites history and therefore
+skill, and `reset_branch` to re-root a branch as an orphan. `reset_branch` rewrites history and therefore
 requires `skill` — the publisher refuses to re-root more than one branch per run.
 
 Two repository rulesets back the publisher's guarantees against direct pushes: release tags (`*-v*`) cannot be
 updated or deleted, and non-`main` single-segment branches (the publish branches) cannot be deleted or
-force-pushed. Repository admins are the only bypass. This means a `reset-branch` run fails in CI at the push —
+force-pushed. Repository admins are the only bypass. This means a `reset_branch` run fails in CI at the push —
 re-rooting is a rare, deliberate act, so run it locally as an admin
 (`node scripts/publish.mjs --write --push --reset-branch --skill NAME`) instead.
 

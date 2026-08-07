@@ -8,10 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       skill:
-        description: Limit to a single skill (default: all)
+        description: "Limit to a single skill (default: all)"
         required: false
-      reset-branch:
-        description: Re-root the branch as an orphan (rewrites its history; requires `skill`)
+      reset_branch:
+        # Underscore, not a hyphen: GitHub expressions cannot dereference a
+        # hyphenated property — `inputs.reset-branch` parses as subtraction.
+        description: "Re-root the branch as an orphan (rewrites its history; requires `skill`)"
         type: boolean
         default: false
 
@@ -50,4 +52,4 @@ jobs:
             ${RESET:+--reset-branch}
         env:
           SKILL: ${{ inputs.skill }}
-          RESET: ${{ inputs.reset-branch == true && '1' || '' }}
+          RESET: ${{ inputs.reset_branch == true && '1' || '' }}
