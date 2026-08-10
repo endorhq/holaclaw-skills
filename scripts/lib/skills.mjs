@@ -105,6 +105,30 @@ function walk(dir, prefix = '') {
   return out;
 }
 
+/**
+ * The skill card ships to users alongside the skill, so the version it states
+ * has to be the version that was published. Nothing else keeps the two in sync:
+ * the card is hand-written, and a frontmatter bump would otherwise leave it
+ * silently describing the previous release.
+ */
+function assertSkillCardVersion(name, dir, version) {
+  const cardPath = path.join(dir, 'skill-card.md');
+  if (!fs.existsSync(cardPath)) return;
+
+  const source = `${name}/skill-card.md`;
+  const section = /^##\s+Skill Version\s*:?\s*$\n+(.+)$/m.exec(fs.readFileSync(cardPath, 'utf8'));
+  if (!section) {
+    throw new Error(`${source}: missing a "## Skill Version" section stating v${version}`);
+  }
+
+  const stated = section[1].trim().replace(/^v/, '');
+  if (stated !== version) {
+    throw new Error(
+      `${source}: "Skill Version" says ${JSON.stringify(stated)} but ${name}/SKILL.md frontmatter says ${JSON.stringify(version)} — bump both together`,
+    );
+  }
+}
+
 export function loadSkill(name) {
   // Validate the name before it touches the filesystem — it may come from the
   // --skill flag, and a branch-safe name can never escape ROOT.
@@ -135,6 +159,8 @@ export function loadSkill(name) {
   if (!fs.existsSync(readmePath)) {
     throw new Error(`${name}/README.md is missing — it is the body of the published README`);
   }
+
+  assertSkillCardVersion(name, dir, data.version);
 
   return {
     name,

@@ -1,8 +1,9 @@
 name: Check
 
 # Runs the publish planner without touching any ref, so a pull request fails
-# here rather than on main: stale catalog table, invalid frontmatter, or skill
-# content edited without bumping its version.
+# here rather than on main: stale catalog table, invalid frontmatter, a skill
+# card whose version has drifted from the frontmatter, or skill content edited
+# without bumping its version.
 on:
   pull_request:
   workflow_dispatch:
@@ -29,5 +30,6 @@ jobs:
       - name: README catalog is current
         run: node scripts/gen-readme.mjs --check
 
+      # Also validates every skill card's stated version against its frontmatter.
       - name: Skills are publishable
         run: node scripts/publish.mjs

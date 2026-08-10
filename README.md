@@ -9,7 +9,7 @@ directory on `main`, and is published automatically to a dedicated branch you ca
 
 | Skill | What it does | Latest | Install |
 | --- | --- | --- | --- |
-| [`browser-navigation`](./browser-navigation) | Improve browser navigation in OpenClaw installations by using the [agent-browser](https://agent-browser.dev) CLI tool. | `v1.0.0` | `openclaw skills install git:endorhq/holaclaw-skills@browser-navigation` |
+| [`browser-navigation`](./browser-navigation) | Improve browser navigation in OpenClaw installations by using the [agent-browser](https://agent-browser.dev) CLI tool. | `v1.0.1` | `openclaw skills install git:endorhq/holaclaw-skills@browser-navigation` |
 
 <!-- catalog:end -->
 
