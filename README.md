@@ -15,7 +15,7 @@ openclaw skills install git:endorhq/holaclaw-skills@browser-navigation
 That tracks the latest release. To pin this exact version instead:
 
 ```bash
-openclaw skills install git:endorhq/holaclaw-skills@browser-navigation-v1.0.0
+openclaw skills install git:endorhq/holaclaw-skills@browser-navigation-v1.0.1
 ```
 
 ## More skills
